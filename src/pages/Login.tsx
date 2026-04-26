@@ -1,13 +1,14 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import Logo from '../components/common/Logo';
 
 export default function Login() {
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-gray-50 pt-20 pb-20">
        <div className="max-w-md w-full px-6">
          <div className="bg-white rounded-3xl p-10 shadow-2xl border border-gray-100">
-           <div className="text-center mb-10">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-gsd-gold to-gsd-gold-light flex items-center justify-center text-gsd-blue-dark font-black text-2xl mx-auto mb-6 shadow-lg">G</div>
+           <div className="flex flex-col items-center text-center mb-10">
+              <Logo theme="light" className="mb-8 scale-110" />
               <h2 className="text-3xl font-serif font-bold text-gsd-blue-dark">Bon retour !</h2>
               <p className="text-gray-500 mt-2">Connectez-vous pour accéder à votre espace.</p>
            </div>

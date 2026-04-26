@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Logo from '../common/Logo';
 
 export default function Navbar() {
   return (
@@ -8,13 +9,9 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-20">
           
           {/* LOGO */}
-          <div className="flex items-center gap-3">
-             <img src="https://img.icons8.com/color/48/globe--v1.png" alt="Logo" className="w-10 h-10 object-contain" />
-             <div className="flex flex-col leading-none">
-               <span className="text-white font-bold tracking-widest text-sm">LE GRAND</span>
-               <span className="text-[#ebd18b] font-bold tracking-widest text-sm">SALON DIVIN</span>
-             </div>
-          </div>
+          <Link to="/">
+             <Logo theme="dark" />
+          </Link>
           
           {/* LINKS */}
           <div className="hidden lg:flex items-center space-x-6">
