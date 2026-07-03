@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuthStore } from '../../../stores/authStore';
 import api from '../../../services/api';
-import { Send, Loader, Info, CheckCheck } from 'lucide-react';
+import { Send, Loader, Info, CheckCheck, Heart } from 'lucide-react';
 import Logo from '../../../shared/components/Logo';
 
 export default function ChatSpace() {
@@ -32,7 +32,7 @@ export default function ChatSpace() {
 
   // Handle active Match polling
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     
     const fetchMessages = async () => {
       if (!activeMatch) return;

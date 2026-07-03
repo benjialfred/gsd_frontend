@@ -1,6 +1,6 @@
 import React from 'react';
-import { WifiOff, Loader2, RefreshCw, Clock, Coffee } from 'lucide-react';
-import Button from '@/shared/components/Button';
+import { WifiOff, RefreshCw, Clock, Coffee } from 'lucide-react';
+import Button from '../../../shared/components/Button';
 
 // 1. Loading Skeleton
 export const LoadingSkeleton: React.FC = () => {

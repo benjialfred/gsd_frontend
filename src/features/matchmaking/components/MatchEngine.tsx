@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { MatchCandidate } from '../types';
+import type { MatchCandidate } from '../types';
 import { getSuggestions, submitSwipeAction } from '../api';
 import PremiumProfileCard from './PremiumProfileCard';
 import MatchModal from './MatchModal';
@@ -19,7 +19,6 @@ export const MatchEngine: React.FC = () => {
   
   // States from API regarding Anti-Burn
   const [isDailyLimitReached, setIsDailyLimitReached] = useState(false);
-  const [remainingToday, setRemainingToday] = useState<number | null>(null);
   const [resetAt, setResetAt] = useState<string | undefined>(undefined);
 
   // Match Modal state
@@ -56,7 +55,6 @@ export const MatchEngine: React.FC = () => {
       // Check for Anti-Burn 429 response
       if (error.response?.status === 429 || error.response?.data?.limit_reached) {
         setIsDailyLimitReached(true);
-        setRemainingToday(error.response.data.remaining);
         setResetAt(error.response.data.reset_at);
         AnalyticsService.track('DISCOVERY_LIMIT_REACHED');
       }
@@ -106,7 +104,6 @@ export const MatchEngine: React.FC = () => {
   };
 
   const currentCandidate = candidates[0];
-  const nextCandidate = candidates[1]; // Prefetched in state, ready to render instantly if needed (e.g. for stack layout)
 
   return (
     <div className="w-full h-full min-h-screen bg-black flex items-center justify-center p-4">

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { User, MapPin, Heart, Info, X } from 'lucide-react';
-import { MatchCandidate } from '../types';
-import Button from '@/shared/components/Button';
+import type { MatchCandidate } from '../types';
+import Button from '../../../shared/components/Button';
 import ProfileDetailsDrawer from './ProfileDetailsDrawer';
 
 interface PremiumProfileCardProps {

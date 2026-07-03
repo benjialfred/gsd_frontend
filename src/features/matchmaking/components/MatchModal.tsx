@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { Heart, MessageCircle, X } from 'lucide-react';
-import { MatchCandidate } from '../types';
-import Button from '@/shared/components/Button';
+import { Heart, MessageCircle } from 'lucide-react';
+import type { MatchCandidate } from '../types';
+import Button from '../../../shared/components/Button';
 
 // Mock Analytics for this component
 const AnalyticsService = {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { X, Heart, ShieldCheck, MapPin } from 'lucide-react';
-import { MatchCandidate } from '../types';
-import Button from '@/shared/components/Button';
+import type { MatchCandidate } from '../types';
+import Button from '../../../shared/components/Button';
 
 interface ProfileDetailsDrawerProps {
   isOpen: boolean;

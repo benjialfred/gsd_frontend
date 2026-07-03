@@ -1,4 +1,4 @@
-import { useNotificationStore, NotificationType } from '../stores/useNotificationStore';
+import { useNotificationStore, type NotificationType } from '../stores/useNotificationStore';
 
 class WebSocketService {
   private socket: WebSocket | null = null;

@@ -1,5 +1,5 @@
-import api from '@/lib/api';
-import { MatchCandidate, SuggestionsResponse, MatchActionResponse } from '../types';
+import api from '../../../services/api';
+import type { MatchCandidate, SuggestionsResponse, MatchActionResponse } from '../types';
 
 export const getSuggestions = async (): Promise<MatchCandidate[]> => {
   const response = await api.get('/matchmaking/suggestions/');
