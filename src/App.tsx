@@ -1,22 +1,29 @@
-import React from 'react';
+
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import Navbar from './components/layout/Navbar';
-import Footer from './components/layout/Footer';
-import Home from './pages/Home';
-import Academy from './pages/Academy';
-import Matchmaking from './pages/Matchmaking';
-import Login from './pages/Login';
-import DashboardLayout from './components/layout/DashboardLayout';
-import ProtectedRoute from './router/ProtectedRoute';
-import ProfileEdit from './pages/dashboard/ProfileEdit';
-import MatchEngine from './pages/dashboard/MatchEngine';
-import ChatSpace from './pages/dashboard/ChatSpace';
+import Navbar from './layouts/Navbar';
+import Footer from './layouts/Footer';
+import Home from './features/landing/pages/Home';
+import Academy from './features/academy/pages/AcademyLanding';
+import Matchmaking from './features/matchmaking/pages/MatchmakingLanding';
+import Login from './features/auth/pages/Login';
+import Register from './features/auth/pages/Register';
+import DashboardLayout from './layouts/DashboardLayout';
+import ProtectedRoute from './routes/ProtectedRoute';
+import ProfileEdit from './features/profile/pages/ProfileEdit';
+import MatchEngine from './features/matchmaking/pages/MatchEngine';
+import ChatSpace from './features/chat/pages/ChatSpace';
+import AcademyDashboard from './features/academy/pages/AcademyDashboard';
+import { OnboardingPage } from './features/onboarding/pages/OnboardingPage';
+import { HomeDashboard } from './features/dashboard/pages/HomeDashboard';
+import { KYCWorkspace } from './features/kyc/pages/KYCWorkspace';
+import { KYCAdmin } from './features/kyc/pages/KYCAdmin';
 
 function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const location = useLocation();
-  const isDashboard = location.pathname.startsWith('/dashboard');
+  const isDashboard = location.pathname.startsWith('/app') || location.pathname.startsWith('/dashboard');
+  const isOnboarding = location.pathname.startsWith('/onboarding');
 
-  if (isDashboard) {
+  if (isDashboard || isOnboarding) {
     return <>{children}</>;
   }
 
@@ -41,15 +48,23 @@ function App() {
           <Route path="/academy" element={<Academy />} />
           <Route path="/matchmaking" element={<Matchmaking />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
           {/* Private Routes */}
           <Route element={<ProtectedRoute />}>
-             <Route path="/dashboard" element={<DashboardLayout />}>
-                <Route index element={<MatchEngine />} />
+             <Route path="/onboarding" element={<OnboardingPage />} />
+             
+             <Route path="/app" element={<DashboardLayout />}>
+                <Route index element={<HomeDashboard />} />
+                <Route path="matches" element={<MatchEngine />} />
                 <Route path="profile" element={<ProfileEdit />} />
-                <Route path="chat" element={<ChatSpace />} />
-                <Route path="academy" element={<div className="p-10"><h2 className="text-3xl font-serif font-bold text-[#082a5e]">E-Academy</h2><p className="text-gray-500 mt-2">Mon parcours d'apprentissage.</p></div>} />
+                <Route path="messages" element={<ChatSpace />} />
+                <Route path="academy" element={<AcademyDashboard />} />
+                <Route path="kyc" element={<KYCWorkspace />} />
              </Route>
+             
+             {/* Admin routes could be guarded by another layout later */}
+             <Route path="/admin/kyc" element={<KYCAdmin />} />
           </Route>
         </Routes>
       </LayoutWrapper>
