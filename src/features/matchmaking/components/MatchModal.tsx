@@ -3,10 +3,11 @@ import { Heart, MessageCircle } from 'lucide-react';
 import type { MatchCandidate } from '../types';
 import Button from '../../../shared/components/Button';
 
-// Mock Analytics for this component
+import { trackEvent } from '../../../services/analytics';
+
 const AnalyticsService = {
   track: (event: string, properties?: any) => {
-    console.log(`[Analytics] ${event}`, properties);
+    trackEvent(event, undefined, properties);
   }
 };
 

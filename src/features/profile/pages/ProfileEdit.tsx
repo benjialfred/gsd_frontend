@@ -1,19 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuthStore } from '../../../stores/authStore';
 import { Camera, Settings, Eye, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import { useQuery } from '@tanstack/react-query';
+import { getReferenceData } from '../../../services/reference';
+
 // --- Subcomponents Placeholders ---
 const PublicView = ({ user }: any) => {
+  const profile = user?.profile || {};
+  
+  const { data: referenceData } = useQuery({
+    queryKey: ['referenceData'],
+    queryFn: getReferenceData
+  });
+  
+  // Calcul de l'âge
+  const getAge = (birthDate: string) => {
+    if (!birthDate) return '';
+    const diff = Date.now() - new Date(birthDate).getTime();
+    const ageDate = new Date(diff); 
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+  };
+
+  const age = getAge(profile.birth_date);
+  
+  // Mapping IDs to Names
+  const languageNames = (profile.languages || []).map((id: number) => {
+    const lang = referenceData?.languages?.find((l: any) => l.id === id);
+    return lang ? lang.name : null;
+  }).filter(Boolean);
+  
+  const interestNames = (profile.interests || []).map((id: number) => {
+    const int = referenceData?.interests?.find((i: any) => i.id === id);
+    return int ? int.name : null;
+  }).filter(Boolean);
+
   return (
     <div className="relative w-full min-h-screen bg-[#FDFBF7]">
       {/* Cover Image Parallax Effect */}
-      <div className="sticky top-0 w-full h-[60vh] z-0 overflow-hidden">
-        <img 
-          src={user?.profile?.avatar || 'https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?q=80&w=2070&auto=format&fit=crop'} 
-          alt="Cover"
-          className="w-full h-full object-cover"
-        />
+      <div className="sticky top-0 w-full h-[60vh] z-0 overflow-hidden bg-gray-100">
+        {profile.avatar ? (
+          <img 
+            src={getMediaUrl(profile.avatar)} 
+            alt="Cover"
+            className="w-full h-full object-cover"
+            onError={(e: any) => {
+              e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800';
+            }}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-300">
+             <Camera size={48} />
+          </div>
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-[#FDFBF7] via-[#FDFBF7]/20 to-transparent"></div>
       </div>
 
@@ -23,13 +63,17 @@ const PublicView = ({ user }: any) => {
         <div className="flex justify-between items-end mb-8">
           <div>
             <h1 className="text-3xl font-serif text-gray-900 leading-tight">
-              {user?.first_name || 'Utilisateur'}, 28
+              {user?.first_name || 'Utilisateur'}{age ? `, ${age}` : ''}
             </h1>
-            <p className="text-gray-500">Paris, France</p>
+            <p className="text-gray-500 uppercase tracking-widest text-xs font-semibold mt-1">
+              {profile.city || 'Ville inconnue'}, {profile.country_code || 'Pays inconnu'}
+            </p>
           </div>
-          <div className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-amber-200">
-            Certifié
-          </div>
+          {profile.kyc_status === 'APPROVED' && (
+            <div className="bg-[#fcf9f2] text-[#C9A84C] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-[#C9A84C]/30 shadow-sm flex items-center gap-1">
+              <CheckCircle size={10} /> Certifié
+            </div>
+          )}
         </div>
 
         {/* Compatibility Preview (Sprint 4/5) */}
@@ -42,77 +86,88 @@ const PublicView = ({ user }: any) => {
 
         {/* Pills */}
         <div className="mb-10">
-          <h3 className="text-xs uppercase tracking-widest text-gray-400 font-bold mb-4">Essentiels</h3>
+          <h3 className="text-xs uppercase tracking-widest text-[#1A3A5C]/60 font-bold mb-4">Informations</h3>
           <div className="flex flex-wrap gap-2">
-            <span className="bg-white border border-[#E8ECE9] px-4 py-2 rounded-xl text-sm text-gray-700 shadow-sm">Évangélique</span>
-            <span className="bg-white border border-[#E8ECE9] px-4 py-2 rounded-xl text-sm text-gray-700 shadow-sm">Français, Anglais</span>
-            <span className="bg-white border border-[#E8ECE9] px-4 py-2 rounded-xl text-sm text-gray-700 shadow-sm">Ne fume pas</span>
+            {profile.denomination && (
+              <span className="bg-white border border-[#E8ECE9] px-4 py-2 rounded-xl text-sm text-[#1A3A5C] shadow-sm">
+                {profile.denomination.replace('_', ' ')}
+              </span>
+            )}
+            {profile.profession && (
+              <span className="bg-white border border-[#E8ECE9] px-4 py-2 rounded-xl text-sm text-[#1A3A5C] shadow-sm">
+                {profile.profession}
+              </span>
+            )}
+            {profile.education_level && (
+              <span className="bg-white border border-[#E8ECE9] px-4 py-2 rounded-xl text-sm text-[#1A3A5C] shadow-sm">
+                {profile.education_level}
+              </span>
+            )}
+            {profile.marital_status && (
+              <span className="bg-white border border-[#E8ECE9] px-4 py-2 rounded-xl text-sm text-[#1A3A5C] shadow-sm">
+                {profile.marital_status.replace('_', ' ')}
+              </span>
+            )}
+            {languageNames.length > 0 && (
+              <span className="bg-white border border-[#E8ECE9] px-4 py-2 rounded-xl text-sm text-[#1A3A5C] shadow-sm">
+                🗣️ {languageNames.join(', ')}
+              </span>
+            )}
           </div>
         </div>
 
-        {/* Vision */}
-        <div>
-          <h3 className="text-xs uppercase tracking-widest text-gray-400 font-bold mb-4">Vision du mariage</h3>
-          <p className="font-serif text-lg text-gray-800 leading-relaxed italic">
-            "Construire un foyer basé sur la grâce, l'amour inconditionnel et la croissance mutuelle."
-          </p>
-        </div>
-
-      </div>
-    </div>
-  );
-};
-
-const PrivateEditor = () => {
-  return (
-    <div className="p-6 md:p-10 max-w-2xl mx-auto space-y-6 pb-32">
-      <h2 className="text-2xl font-light text-gray-900 mb-8">Éditer le profil</h2>
-
-      {/* Photo Manager */}
-      <div className="bg-white rounded-3xl p-6 border border-[#E8ECE9] shadow-sm">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="font-medium text-gray-900">Photos</h3>
-          <span className="text-xs text-gray-400">1/6</span>
-        </div>
-        
-        <div className="grid grid-cols-3 gap-3">
-          {/* Main Photo */}
-          <div className="col-span-2 row-span-2 relative rounded-2xl overflow-hidden aspect-square border border-[#E8ECE9]">
-            <img src="https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?q=80&w=2070&auto=format&fit=crop" className="w-full h-full object-cover" />
-            <div className="absolute top-2 left-2 bg-[#8C9B90] text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">Principale</div>
-            <div className="absolute bottom-2 left-2 bg-white/90 backdrop-blur-sm text-green-600 text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1">
-              <CheckCircle size={10} /> APPROVED
+        {/* Interests */}
+        {interestNames.length > 0 && (
+          <div className="mb-10">
+            <h3 className="text-xs uppercase tracking-widest text-[#1A3A5C]/60 font-bold mb-4">Centres d'intérêt</h3>
+            <div className="flex flex-wrap gap-2">
+              {interestNames.map((name: string, i: number) => (
+                <span key={i} className="bg-[#fcf9f2] text-[#C9A84C] border border-[#C9A84C]/30 px-4 py-2 rounded-xl text-sm shadow-sm">
+                  {name}
+                </span>
+              ))}
             </div>
           </div>
-          
-          {/* Empty Slots */}
-          <div className="relative rounded-2xl border-2 border-dashed border-[#E8ECE9] bg-[#FDFBF7] aspect-square flex flex-col items-center justify-center text-gray-400 hover:bg-white hover:border-[#8C9B90] transition-colors cursor-pointer">
-            <Camera size={24} className="mb-2" />
-            <span className="text-[10px] font-medium uppercase tracking-wider">Ajouter</span>
-          </div>
-          <div className="relative rounded-2xl border-2 border-dashed border-[#E8ECE9] bg-[#FDFBF7] aspect-square flex flex-col items-center justify-center text-gray-400"></div>
-        </div>
-      </div>
+        )}
 
-      {/* Accordion List */}
-      <div className="bg-white rounded-3xl border border-[#E8ECE9] overflow-hidden shadow-sm divide-y divide-[#E8ECE9]">
-        {['Identité & Localisation', 'Parcours Spirituel', 'Centres d\'intérêt & Langues', 'Vision du mariage', 'Préférences de Matching'].map((section, idx) => (
-          <button key={idx} className="w-full px-6 py-5 flex justify-between items-center bg-white hover:bg-[#FDFBF7] transition-colors text-left">
-             <span className="font-medium text-gray-900 text-sm">{section}</span>
-             <ChevronLeft className="text-gray-400 transform rotate-180" size={18} />
-          </button>
-        ))}
+        {/* Vision */}
+        {profile.marriage_vision && (
+          <div className="mb-10">
+            <h3 className="text-xs uppercase tracking-widest text-[#1A3A5C]/60 font-bold mb-4">Vision du mariage</h3>
+            <p className="font-serif text-lg text-[#1A3A5C] leading-relaxed italic border-l-2 border-[#C9A84C] pl-4">
+              "{profile.marriage_vision}"
+            </p>
+          </div>
+        )}
+        
+        {/* Bio */}
+        {profile.bio && (
+          <div className="mb-10">
+            <h3 className="text-xs uppercase tracking-widest text-[#1A3A5C]/60 font-bold mb-4">À propos de moi</h3>
+            <p className="text-sm font-light text-[#1A3A5C]/80 leading-relaxed whitespace-pre-line">
+              {profile.bio}
+            </p>
+          </div>
+        )}
+
       </div>
     </div>
   );
 };
+import { PrivateEditor } from './PrivateEditor';
 
 
+import { getMediaUrl } from '../../../services/profile';
 import { Heart, CheckCircle } from 'lucide-react';
 
 export default function PremiumProfile() {
-  const { user } = useAuthStore();
-  const [viewMode, setViewMode] = useState<'public' | 'private'>('private');
+  const { user, checkAuth } = useAuthStore();
+  const [viewMode, setViewMode] = useState<'public' | 'private'>('public');
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] relative w-full overflow-hidden flex flex-col">
@@ -141,7 +196,7 @@ export default function PremiumProfile() {
             </motion.div>
           ) : (
             <motion.div key="private" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <PrivateEditor />
+              <PrivateEditor user={user} onProfileUpdate={checkAuth} />
             </motion.div>
           )}
         </AnimatePresence>

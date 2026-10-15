@@ -18,9 +18,9 @@ interface OnboardingData {
   hobbies?: number[];
   marriage_objectives?: string;
   marriage_expectations?: string;
-  preferred_age_min?: number;
-  preferred_age_max?: number;
-  preferred_distance?: number;
+  pref_age_min?: number;
+  pref_age_max?: number;
+  pref_distance?: number;
 }
 
 interface OnboardingStore {

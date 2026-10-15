@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, MapPin, Heart, Info, X } from 'lucide-react';
+import { User, MapPin, Heart, Info, X, Award } from 'lucide-react';
 import type { MatchCandidate } from '../types';
 import Button from '../../../shared/components/Button';
 import ProfileDetailsDrawer from './ProfileDetailsDrawer';
@@ -44,6 +44,14 @@ const PremiumProfileCard: React.FC<PremiumProfileCardProps> = ({ candidate, onLi
         {/* Gradient Overlay pour lisibilité */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
 
+        {/* Top Floating Badge - Certifié Alliance GSD */}
+        {profile.is_academy_certified && (
+          <div className="absolute top-4 left-4 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-[#1A3A5C]/95 via-[#234A75]/95 to-[#1A3A5C]/95 border border-[#C9A84C]/80 backdrop-blur-md shadow-lg shadow-[#C9A84C]/25 text-[#FAF9F6]">
+            <Award size={15} className="text-[#C9A84C] fill-[#C9A84C]/30 animate-pulse" />
+            <span className="text-xs font-semibold tracking-wide text-[#EAD8A4]">Certifié Alliance GSD</span>
+          </div>
+        )}
+
         {/* Top Floating Actions (ex: Voir Profil Complet) */}
         <div className="absolute top-4 right-4 z-10">
           <button 
@@ -77,6 +85,12 @@ const PremiumProfileCard: React.FC<PremiumProfileCardProps> = ({ candidate, onLi
 
           {/* Profile Basic Info */}
           <div className="mb-6">
+            {profile.is_academy_certified && profile.certifications && profile.certifications.length > 0 && (
+              <div className="flex items-center gap-1.5 mb-2 text-xs font-medium text-[#EAD8A4] bg-[#1A3A5C]/90 border border-[#C9A84C]/50 px-2.5 py-1 rounded-lg w-fit backdrop-blur-md shadow-sm">
+                <Award size={13} className="text-[#C9A84C]" />
+                <span className="truncate max-w-[260px]">{profile.certifications[0].course_title}</span>
+              </div>
+            )}
             <h2 className="text-3xl font-bold text-white flex items-end gap-2">
               {profile.first_name}
               {profile.age && <span className="text-2xl font-normal text-white/80">{profile.age} ans</span>}

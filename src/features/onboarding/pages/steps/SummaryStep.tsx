@@ -13,7 +13,7 @@ export const SummaryStep: React.FC = () => {
       title="Profil Débloqué ! 🎉"
       subtitle="Vous avez posé des fondations solides pour de belles rencontres."
     >
-      <div className="flex flex-col items-center text-center space-y-8 py-4 max-w-md mx-auto w-full">
+      <div className="flex flex-col items-center text-center space-y-12 py-4 max-w-md mx-auto w-full mt-4">
         <div className="relative w-48 h-48">
           {/* Circular Progress Indicator */}
           <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
@@ -22,8 +22,8 @@ export const SummaryStep: React.FC = () => {
               cy="50"
               r="45"
               fill="none"
-              stroke="#F5F7F5"
-              strokeWidth="10"
+              stroke="#fcf9f2"
+              strokeWidth="6"
             />
             <motion.circle
               initial={{ strokeDashoffset: 283 }}
@@ -33,26 +33,27 @@ export const SummaryStep: React.FC = () => {
               cy="50"
               r="45"
               fill="none"
-              stroke="#8C9B90"
-              strokeWidth="10"
+              stroke="#C9A84C"
+              strokeWidth="6"
               strokeDasharray="283"
               strokeLinecap="round"
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-4xl font-light text-gray-900">{completion}%</span>
-            <span className="text-xs text-gray-500 uppercase tracking-wider mt-1">Complété</span>
+            <span className="text-4xl font-serif text-[#1A3A5C]">{completion}%</span>
+            <span className="text-[10px] text-[#1A3A5C]/50 uppercase tracking-[0.2em] mt-2">Complété</span>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl border border-[#E8ECE9] w-full text-left shadow-sm">
-          <h3 className="font-medium text-gray-900 mb-4">Avantages débloqués :</h3>
-          <ul className="space-y-3">
-            <li className="flex items-center gap-3 text-sm text-gray-600">
-              <span className="text-[#8C9B90]">✓</span> Matching actif avec les autres membres
+        <div className="w-full text-left bg-white p-8 border border-gray-100 shadow-sm relative overflow-hidden group">
+          <div className="absolute top-0 left-0 w-1 h-full bg-[#C9A84C]"></div>
+          <h3 className="font-serif text-xl text-[#1A3A5C] mb-6">Avantages débloqués</h3>
+          <ul className="space-y-4">
+            <li className="flex items-center gap-4 text-sm text-[#1A3A5C]/80 font-light">
+              <span className="text-[#C9A84C] text-lg">✦</span> Matching actif avec les autres membres
             </li>
-            <li className="flex items-center gap-3 text-sm text-gray-600">
-              <span className="text-[#8C9B90]">✓</span> Visibilité accrue dans la section Découverte
+            <li className="flex items-center gap-4 text-sm text-[#1A3A5C]/80 font-light">
+              <span className="text-[#C9A84C] text-lg">✦</span> Visibilité accrue dans la section Découverte
             </li>
           </ul>
         </div>

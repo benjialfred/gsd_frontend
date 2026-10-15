@@ -42,21 +42,21 @@ export const StepContainer: React.FC<StepContainerProps> = ({ children, stepKey,
         className="w-full max-w-2xl mx-auto px-6 py-8 flex flex-col min-h-[60vh]"
       >
         {title && (
-          <h2 className="text-3xl font-light text-gray-900 mb-2 tracking-tight">
+          <h2 className="text-4xl font-serif text-[#1A3A5C] mb-3 tracking-wide">
             {title}
           </h2>
         )}
         
         {subtitle && (
-          <p className="text-gray-500 mb-6 text-lg">
+          <p className="text-gray-500 mb-8 text-sm font-light leading-relaxed">
             {subtitle}
           </p>
         )}
 
         {benefit && (
-          <div className="mb-8 p-4 bg-[#F5F7F5] border border-[#E8ECE9] rounded-xl flex items-start gap-3">
-            <span className="text-[#8C9B90] mt-0.5">✨</span>
-            <p className="text-sm text-gray-600 font-medium leading-relaxed">
+          <div className="mb-8 p-4 bg-[#fcf9f2] border border-[#C9A84C]/20 flex items-start gap-3">
+            <span className="text-[#C9A84C] mt-0.5 text-lg">✦</span>
+            <p className="text-xs text-[#1A3A5C]/80 font-normal leading-relaxed uppercase tracking-wider">
               {benefit}
             </p>
           </div>

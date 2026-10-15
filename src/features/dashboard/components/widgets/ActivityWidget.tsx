@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Camera, CheckCircle, Edit3, Loader, Activity } from 'lucide-react';
 import api from '../../../../services/api';
+import { ActivityFeedSkeleton } from '../../../../components/common/Skeletons';
 
 interface FeedEvent {
   id: number;
@@ -68,21 +69,15 @@ export const ActivityWidget: React.FC = () => {
     fetchFeed();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="bg-white rounded-3xl p-8 border border-[#E8ECE9] min-h-[200px] flex items-center justify-center">
-        <Loader className="animate-spin text-[#dca54a]" size={24} />
-      </div>
-    );
-  }
-
   return (
     <div className="bg-white rounded-3xl p-8 border border-[#E8ECE9]">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-medium text-gray-900">Vos dernières activités</h2>
       </div>
 
-      {events.length === 0 ? (
+      {loading ? (
+        <ActivityFeedSkeleton />
+      ) : events.length === 0 ? (
         <div className="text-center py-10 flex flex-col items-center justify-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
           <Activity className="w-10 h-10 text-gray-300 mb-3" />
           <h3 className="text-gray-500 font-medium mb-1">Aucune activité récente</h3>

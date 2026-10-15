@@ -5,10 +5,11 @@ import PremiumProfileCard from './PremiumProfileCard';
 import MatchModal from './MatchModal';
 import { DiscoveryStateHandler } from './DiscoveryStates';
 
-// Mock Analytics for this component
+import { trackEvent } from '../../../services/analytics';
+
 const AnalyticsService = {
   track: (event: string, properties?: any) => {
-    console.log(`[Analytics] ${event}`, properties);
+    trackEvent(event, undefined, properties);
   }
 };
 

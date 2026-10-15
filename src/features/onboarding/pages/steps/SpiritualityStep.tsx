@@ -12,13 +12,13 @@ export const SpiritualityStep: React.FC = () => {
       subtitle="La dimension spirituelle est au cœur de notre plateforme."
       benefit="Cette information est cruciale pour vous proposer des profils partageant vos valeurs."
     >
-      <div className="space-y-8 max-w-md mx-auto w-full">
-        <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">Dénomination</label>
+      <div className="space-y-10 max-w-md mx-auto w-full mt-4">
+        <div className="space-y-5">
+          <label className="block text-xs font-semibold uppercase tracking-widest text-[#1A3A5C]/80">Dénomination</label>
           <select 
             value={formData.denomination || ''}
             onChange={(e) => updateFormData({ denomination: e.target.value })}
-            className="w-full px-4 py-4 rounded-xl border-2 border-gray-100 focus:border-[#8C9B90] focus:ring-0 transition-colors bg-white"
+            className="w-full px-4 py-4 border-b border-gray-200 focus:border-[#C9A84C] focus:ring-0 transition-colors bg-transparent text-sm text-[#1A3A5C] font-light outline-none"
           >
             <option value="" disabled>Sélectionnez une dénomination</option>
             <option value="CATHOLIC">Catholique</option>
@@ -28,12 +28,12 @@ export const SpiritualityStep: React.FC = () => {
           </select>
         </div>
 
-        <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">Fréquence de culte</label>
+        <div className="space-y-5">
+          <label className="block text-xs font-semibold uppercase tracking-widest text-[#1A3A5C]/80">Fréquence de culte</label>
           <select 
             value={formData.church_attendance || ''}
             onChange={(e) => updateFormData({ church_attendance: e.target.value })}
-            className="w-full px-4 py-4 rounded-xl border-2 border-gray-100 focus:border-[#8C9B90] focus:ring-0 transition-colors bg-white"
+            className="w-full px-4 py-4 border-b border-gray-200 focus:border-[#C9A84C] focus:ring-0 transition-colors bg-transparent text-sm text-[#1A3A5C] font-light outline-none"
           >
             <option value="" disabled>À quelle fréquence allez-vous à l'église ?</option>
             <option value="WEEKLY">Toutes les semaines</option>

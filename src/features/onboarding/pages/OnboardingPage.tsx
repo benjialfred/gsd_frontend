@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import api from '../../../services/api';
 import { useNavigate } from 'react-router-dom';
 import { useOnboardingStore } from '../../../stores/useOnboardingStore';
+import { useAuthStore } from '../../../stores/authStore';
 import { useUpdateProfileMutation, useProfileCompletion } from '../../../hooks/useProfile';
 import { ProgressIndicator } from '../components/ProgressIndicator';
 import { NavigationControls } from '../components/NavigationControls';
 import { SaveAndExitModal } from '../components/SaveAndExitModal';
 import { trackEvent } from '../../../services/analytics';
+import { toast } from '../../../stores/useToastStore';
 
 // Import all step components
 import { WelcomeStep } from './steps/WelcomeStep';
@@ -37,9 +40,29 @@ export const OnboardingPage: React.FC = () => {
     return () => document.removeEventListener('open-save-exit', handleOpenModal);
   }, []);
 
-  // Resume logic (if user is returning, start from highest step reached)
-  // This is handled automatically by Zustand persist, we just need to ensure they start at `currentStep`.
-  
+  // Fetch from backend to ensure cross-device persistence
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const response = await api.get('/api/users/me/');
+        const profile = response.data.profile;
+        if (profile) {
+          useOnboardingStore.setState({
+            currentStep: profile.onboarding_step > 0 ? Math.min(profile.onboarding_step, TOTAL_STEPS) : 1,
+            highestStepReached: profile.onboarding_step > 0 ? Math.min(profile.onboarding_step, TOTAL_STEPS) : 1,
+            formData: {
+              ...useOnboardingStore.getState().formData,
+              ...profile
+            }
+          });
+        }
+      } catch (err) {
+        console.error('Failed to load profile for onboarding', err);
+      }
+    };
+    loadProfile();
+  }, []);
+
   // Track ONBOARDING_STARTED or RESUMED on mount
   useEffect(() => {
     if (currentStep === 1) {
@@ -49,11 +72,11 @@ export const OnboardingPage: React.FC = () => {
     }
   }, []);
 
-  // Track KYC_PROMPT_VIEWED
+  // Track KYC_PROMPT_VIEWED (Not tracked in backend)
   useEffect(() => {
-    if (currentStep === 11) {
-      trackEvent('KYC_PROMPT_VIEWED');
-    }
+    // if (currentStep === 11) {
+    //   trackEvent('KYC_PROMPT_VIEWED');
+    // }
   }, [currentStep]);
 
   const handleNext = async () => {
@@ -62,11 +85,11 @@ export const OnboardingPage: React.FC = () => {
       // Patch the current data
       await updateProfileMutation.mutateAsync({
         ...formData,
-        onboarding_step: currentStep + 1,
+        onboarding_step: currentStep < TOTAL_STEPS ? currentStep + 1 : TOTAL_STEPS,
       });
       
       if (currentStep < TOTAL_STEPS) {
-        trackEvent('STEP_COMPLETED', currentStep);
+        trackEvent('ONBOARDING_STEP_COMPLETED', currentStep);
         nextStep();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
@@ -74,11 +97,28 @@ export const OnboardingPage: React.FC = () => {
         trackEvent('KYC_STARTED');
         trackEvent('ONBOARDING_COMPLETED');
         await updateProfileMutation.mutateAsync({ onboarding_completed: true });
+        
+        // Update local auth store so ProtectedRoute doesn't redirect back
+        const { user, updateUser } = useAuthStore.getState();
+        if (user) {
+          updateUser({
+            ...user,
+            profile: {
+              ...user.profile,
+              onboarding_completed: true,
+              onboarding_step: TOTAL_STEPS
+            }
+          });
+        }
+
         navigate('/app');
+        toast.success("Félicitations ! Votre profil est configuré.");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to save progress:", error);
-      // We could add a toast here
+      const isNetError = error?.message?.includes('Network Error') || error?.code === 'ERR_NETWORK';
+      const detail = error?.response?.data?.detail || error?.response?.data?.error || (isNetError ? "Connexion au serveur interrompue. Veuillez réessayer." : "Erreur lors de la sauvegarde de votre profil.");
+      toast.error(typeof detail === 'string' ? detail : "Erreur lors de la sauvegarde.");
     } finally {
       setIsSubmitting(false);
     }
@@ -130,7 +170,7 @@ export const OnboardingPage: React.FC = () => {
         onClose={() => setIsSaveModalOpen(false)}
         onConfirm={() => {
           setIsSaveModalOpen(false);
-          trackEvent('STEP_ABANDONED', currentStep);
+          trackEvent('ONBOARDING_ABANDONED', currentStep);
           // Rediriger vers l'accueil ou le login
           navigate('/');
         }}

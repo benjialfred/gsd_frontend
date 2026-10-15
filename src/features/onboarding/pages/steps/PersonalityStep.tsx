@@ -38,9 +38,9 @@ export const PersonalityStep: React.FC = () => {
       subtitle="Qu'aimez-vous faire de votre temps libre ?"
       benefit="Nous utiliserons ces informations pour améliorer vos compatibilités."
     >
-      <div className="space-y-8 max-w-2xl mx-auto w-full">
-        <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">Langues parlées</label>
+      <div className="space-y-10 max-w-2xl mx-auto w-full mt-4">
+        <div className="space-y-5">
+          <label className="block text-xs font-semibold uppercase tracking-widest text-[#1A3A5C]/80">Langues parlées</label>
           <TagSelector 
             options={languages}
             selectedIds={formData.languages || []}
@@ -48,8 +48,8 @@ export const PersonalityStep: React.FC = () => {
           />
         </div>
 
-        <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">Centres d'intérêt (Max 5)</label>
+        <div className="space-y-5">
+          <label className="block text-xs font-semibold uppercase tracking-widest text-[#1A3A5C]/80">Centres d'intérêt (Max 5)</label>
           <TagSelector 
             options={interests}
             selectedIds={formData.interests || []}

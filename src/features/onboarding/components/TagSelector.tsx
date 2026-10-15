@@ -32,10 +32,10 @@ export const TagSelector: React.FC<TagSelectorProps> = ({ options, selectedIds, 
           <button
             key={option.id}
             onClick={() => toggleTag(option.id)}
-            className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 border
+            className={`px-5 py-2.5 rounded-none text-xs font-semibold tracking-wider uppercase transition-all duration-200 border
               ${isSelected 
-                ? 'bg-[#8C9B90] text-white border-[#8C9B90] shadow-sm scale-[1.02]' 
-                : 'bg-white text-gray-700 border-gray-200 hover:border-[#8C9B90] hover:bg-gray-50'
+                ? 'bg-[#1A3A5C] text-white border-[#1A3A5C] shadow-sm scale-[1.02]' 
+                : 'bg-transparent text-[#1A3A5C]/70 border-gray-200 hover:border-[#C9A84C] hover:text-[#C9A84C]'
               }
             `}
           >

@@ -1,8 +1,18 @@
 import api from './api';
 
 export const updateProfile = async (data: any) => {
-  // Le backend attend "profile" imbriqué pour les champs de profil
-  const payload = { profile: data };
+  // Les champs 'first_name', 'last_name' appartiennent au modèle User
+  const userFields = ['first_name', 'last_name'];
+  const payload: any = { profile: {} };
+
+  Object.keys(data).forEach(key => {
+    if (userFields.includes(key)) {
+      payload[key] = data[key];
+    } else {
+      payload.profile[key] = data[key];
+    }
+  });
+
   const response = await api.patch('/api/users/me/', payload);
   return response.data;
 };
@@ -12,16 +22,24 @@ export const getProfileCompletion = async () => {
   return response.data;
 };
 
+export const getMediaUrl = (path?: string | null): string => {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('blob:') || path.startsWith('data:')) {
+    return path;
+  }
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+  return `${baseUrl.replace(/\/$/, '')}${path.startsWith('/') ? '' : '/'}${path}`;
+};
+
 export const uploadMedia = async (file: File, isPrimary: boolean = false) => {
   const formData = new FormData();
   formData.append('file', file);
   formData.append('is_primary', isPrimary ? 'true' : 'false');
-  // media_type peut être déduit, mais on l'envoie si besoin
   formData.append('media_type', file.type.startsWith('video') ? 'VIDEO' : 'IMAGE');
 
   const response = await api.post('/api/profiles/me/media/', formData, {
     headers: {
-      'Content-Type': 'multipart/form-data',
+      'Content-Type': undefined,
     },
   });
   return response.data;
@@ -35,8 +53,9 @@ export const submitKYC = async (front: File, back: File, selfie: File) => {
 
   const response = await api.post('/api/profiles/me/kyc/', formData, {
     headers: {
-      'Content-Type': 'multipart/form-data',
+      'Content-Type': undefined,
     },
   });
   return response.data;
 };
+

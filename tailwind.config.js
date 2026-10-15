@@ -31,8 +31,8 @@ export default {
         }
       },
       fontFamily: {
-        serif: ['"Playfair Display"', 'serif'],
-        sans: ['Inter', 'sans-serif'],
+        serif: ['"Cormorant Garamond"', 'serif'],
+        sans: ['"DM Sans"', 'sans-serif'],
       },
       keyframes: {
         slowPan: {

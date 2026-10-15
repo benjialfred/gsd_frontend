@@ -3,8 +3,8 @@ import { useProfileCompletion } from '../../../../hooks/useProfile';
 import { motion } from 'framer-motion';
 
 export const GrowthWidget: React.FC = () => {
-  const { data: completionData } = useProfileCompletion();
-  const completion = completionData?.completion_percentage || 0;
+  const { data: completionData, isLoading } = useProfileCompletion();
+  const completion = completionData?.completion_percentage ?? 0;
   const nextAction = completionData?.next_action;
   
   return (
@@ -18,23 +18,42 @@ export const GrowthWidget: React.FC = () => {
         <div className="relative w-24 h-24 flex-shrink-0">
           <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
             <circle cx="50" cy="50" r="45" fill="none" stroke="#E8ECE9" strokeWidth="8" />
-            <motion.circle
-              initial={{ strokeDashoffset: 283 }}
-              animate={{ strokeDashoffset: 283 - (283 * completion) / 100 }}
-              transition={{ duration: 1.5, ease: "easeOut" }}
-              cx="50" cy="50" r="45" fill="none" stroke="#8C9B90" strokeWidth="8"
-              strokeDasharray="283" strokeLinecap="round"
-            />
+            {!isLoading && (
+              <motion.circle
+                initial={{ strokeDashoffset: 283 }}
+                animate={{ strokeDashoffset: 283 - (283 * completion) / 100 }}
+                transition={{ duration: 1.2, ease: "easeOut" }}
+                cx="50" cy="50" r="45" fill="none" stroke="#8C9B90" strokeWidth="8"
+                strokeDasharray="283" strokeLinecap="round"
+              />
+            )}
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-xl font-medium text-gray-900">{completion}%</span>
+            {isLoading ? (
+              <span className="w-8 h-6 bg-gray-200/80 rounded-md animate-pulse" />
+            ) : (
+              <motion.span 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="text-xl font-medium text-gray-900"
+              >
+                {completion}%
+              </motion.span>
+            )}
           </div>
         </div>
 
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-[#8C9B90]"></div>
-            <span className="text-sm text-gray-600">Profil complété : <strong>{completion}%</strong></span>
+            <span className="text-sm text-gray-600">
+              Profil complété :{' '}
+              {isLoading ? (
+                <span className="inline-block w-8 h-4 bg-gray-200 rounded animate-pulse align-middle" />
+              ) : (
+                <strong>{completion}%</strong>
+              )}
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-amber-400"></div>
@@ -43,7 +62,12 @@ export const GrowthWidget: React.FC = () => {
         </div>
       </div>
 
-      {nextAction && (
+      {isLoading ? (
+        <div className="mt-auto bg-white/60 p-4 rounded-xl border border-white/40 animate-pulse space-y-2">
+          <div className="h-3 bg-gray-200 rounded w-1/3" />
+          <div className="h-4 bg-gray-200 rounded w-2/3" />
+        </div>
+      ) : nextAction ? (
         <div className="mt-auto bg-white/60 p-4 rounded-xl border border-white/40">
           <p className="text-xs text-gray-500 uppercase tracking-widest font-bold mb-1">Étape suivante</p>
           <div className="flex justify-between items-center">
@@ -53,7 +77,7 @@ export const GrowthWidget: React.FC = () => {
             </button>
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 };
