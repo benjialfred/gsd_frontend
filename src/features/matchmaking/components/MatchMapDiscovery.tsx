@@ -10,7 +10,7 @@ import api from '../../../services/api';
 import { toast } from '../../../stores/useToastStore';
 import { getMediaUrl } from '../../../services/profile';
 
-const GEOAPIFY_API_KEY = '5847ad4796b04eb183e6c59c64911d0c';
+const GEOAPIFY_API_KEY = import.meta.env.VITE_GEOAPIFY_API_KEY || '5847ad4796b04eb183e6c59c64911d0c';
 
 // Presets des villes phares
 const PRESET_CITIES = [
