@@ -835,6 +835,201 @@ export default function Home() {
       </section>
 
       {/* ========================================================
+          4-BIS. TÉMOIGNAGES ROYAUX : LES ALLIANCES BÉNIES DE GSD
+         ======================================================== */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#C9A84C]/15 border border-[#C9A84C]/35 text-[#C9A84C] text-xs font-serif font-bold uppercase tracking-widest">
+            <Heart size={13} className="fill-current text-[#C9A84C]" />
+            <span>Témoignages & Fruits de l'Esprit</span>
+          </div>
+          <h2 className="text-3xl sm:text-5xl font-serif font-bold text-[#1A3A5C]">
+            Ils Ont Trouvé Leur Alliance sur GSD
+          </h2>
+          <p className="text-sm sm:text-base text-gray-600 font-light leading-relaxed">
+            Des couples chrétiens qui ont fait le choix du discernement, de la prière et de l'authenticité. Découvrez comment Dieu a guidé leurs pas vers le mariage saint.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Témoignage 1 */}
+          <div className="bg-white rounded-3xl p-7 border border-[#EFECE6] shadow-sm hover:shadow-xl transition-all flex flex-col justify-between relative group">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs uppercase font-bold tracking-wider px-3 py-1 rounded-full bg-[#C9A84C]/15 text-[#C9A84C] border border-[#C9A84C]/30 flex items-center gap-1.5">
+                  <Crown size={12} />
+                  <span>Mariés en 2025</span>
+                </span>
+                <span className="text-xs text-gray-400 font-semibold">Douala, Cameroun</span>
+              </div>
+
+              <div className="flex items-center gap-3.5">
+                <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-[#C9A84C] shadow-md shrink-0">
+                  <img
+                    src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=300&q=80"
+                    alt="Julien & Nelly"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h4 className="font-serif font-bold text-base text-[#1A3A5C]">Julien & Nelly</h4>
+                  <p className="text-xs text-gray-500">Église Évangélique du Cameroun</p>
+                </div>
+              </div>
+
+              <p className="text-xs sm:text-sm text-gray-700 italic font-serif leading-relaxed bg-[#FAF9F6] p-4 rounded-2xl border-l-2 border-[#C9A84C]">
+                « Nous nous étions croisés sur le radar cartographique à Douala, puis revus lors du Sommet Célibataires GSD. 10 mois plus tard, nous célébrions notre mariage devant Dieu. Merci GSD pour ce cadre d'honneur ! »
+              </p>
+            </div>
+
+            <div className="pt-4 mt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+              <span className="italic text-[#C9A84C]">« Ecclésiaste 4:12 »</span>
+              <span className="text-emerald-700 font-semibold flex items-center gap-1">
+                <CheckCircle2 size={13} />
+                Profils 100% Vérifiés
+              </span>
+            </div>
+          </div>
+
+          {/* Témoignage 2 */}
+          <div className="bg-white rounded-3xl p-7 border border-[#EFECE6] shadow-sm hover:shadow-xl transition-all flex flex-col justify-between relative group">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs uppercase font-bold tracking-wider px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1.5">
+                  <Sparkles size={12} />
+                  <span>Fiancés en 2026</span>
+                </span>
+                <span className="text-xs text-gray-400 font-semibold">Yaoundé, Cameroun</span>
+              </div>
+
+              <div className="flex items-center gap-3.5">
+                <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-[#C9A84C] shadow-md shrink-0">
+                  <img
+                    src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=300&q=80"
+                    alt="Pasteur Éric & Sarah"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h4 className="font-serif font-bold text-base text-[#1A3A5C]">Éric & Sarah</h4>
+                  <p className="text-xs text-gray-500">Communauté Missionnaire Baptiste</p>
+                </div>
+              </div>
+
+              <p className="text-xs sm:text-sm text-gray-700 italic font-serif leading-relaxed bg-[#FAF9F6] p-4 rounded-2xl border-l-2 border-[#C9A84C]">
+                « Fini le flou des applications profanes où l'on perd des mois. Sur GSD, j'ai tout de suite vu qu'elle partageait mon appel ministériel et ma vision du couple saint. Nous préparons notre mariage avec paix. »
+              </p>
+            </div>
+
+            <div className="pt-4 mt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+              <span className="italic text-[#C9A84C]">« Proverbes 18:22 »</span>
+              <span className="text-emerald-700 font-semibold flex items-center gap-1">
+                <CheckCircle2 size={13} />
+                Accompagnement Pastoral
+              </span>
+            </div>
+          </div>
+
+          {/* Témoignage 3 */}
+          <div className="bg-white rounded-3xl p-7 border border-[#EFECE6] shadow-sm hover:shadow-xl transition-all flex flex-col justify-between relative group">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs uppercase font-bold tracking-wider px-3 py-1 rounded-full bg-[#1A3A5C]/10 text-[#1A3A5C] border border-[#1A3A5C]/20 flex items-center gap-1.5">
+                  <Crown size={12} />
+                  <span>Mariés en 2026</span>
+                </span>
+                <span className="text-xs text-gray-400 font-semibold">Abidjan & Diaspora</span>
+              </div>
+
+              <div className="flex items-center gap-3.5">
+                <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-[#C9A84C] shadow-md shrink-0">
+                  <img
+                    src="https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?auto=format&fit=crop&w=300&q=80"
+                    alt="Dr David & Grâce"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h4 className="font-serif font-bold text-base text-[#1A3A5C]">Dr David & Grâce</h4>
+                  <p className="text-xs text-gray-500">Assemblée de Dieu & Diaspora</p>
+                </div>
+              </div>
+
+              <p className="text-xs sm:text-sm text-gray-700 italic font-serif leading-relaxed bg-[#FAF9F6] p-4 rounded-2xl border-l-2 border-[#C9A84C]">
+                « La distance Paris-Abidjan semblait un obstacle insurmontable. Grâce au radar et aux visioconférences guidées en toute sécurité, Dieu a tissé notre alliance. Aujourd'hui nous vivons sous le même toit béni. »
+              </p>
+            </div>
+
+            <div className="pt-4 mt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+              <span className="italic text-[#C9A84C]">« 1 Corinthiens 13:7 »</span>
+              <span className="text-emerald-700 font-semibold flex items-center gap-1">
+                <CheckCircle2 size={13} />
+                Alliance Transfrontalière
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================
+          4-TER. BRISE-GLACES SPIRITUELS : COMMENT INITIER LE DIALOGUE EN SAINTETÉ
+         ======================================================== */}
+      <section className="py-16 bg-[#F5F2EB] border-y border-[#EFECE6]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <div className="lg:col-span-5 space-y-4 text-left">
+              <span className="text-xs font-serif font-bold uppercase tracking-widest text-[#C9A84C]">
+                Bienveillance & Pudeur
+              </span>
+              <h3 className="text-2xl sm:text-4xl font-serif font-bold text-[#1A3A5C] leading-snug">
+                Fini la Gêne du Premier Message.
+              </h3>
+              <p className="text-xs sm:text-sm text-gray-600 font-light leading-relaxed">
+                Sur GSD, vous ne manquerez jamais d'inspiration pour engager la conversation. Nos brise-glaces bibliques et invitations à la prière permettent de nouer contact dans le respect mutuel, loin de toute maladresse profane.
+              </p>
+            </div>
+
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              {[
+                {
+                  cat: "Salutation & Bénédiction",
+                  msg: "« Que la paix et la grâce du Seigneur reposent sur ta journée. J'ai été touché(e) par la foi qui émane de ton profil. »",
+                  badge: "Brise-Glace Populaire"
+                },
+                {
+                  cat: "Partage Doctrinal",
+                  msg: "« Quel verset biblique t'accompagne tout particulièrement ces temps-ci dans ta marche avec Dieu ? »",
+                  badge: "Édification Mutuelle"
+                },
+                {
+                  cat: "Vision de l'Alliance",
+                  msg: "« « Une corde à trois fils ne se rompt pas facilement » (Eccl. 4:12). Seriez-vous ouvert(e) à échanger sur nos visions respectives ? »",
+                  badge: "Orienté Foyer"
+                },
+                {
+                  cat: "Invitation de Prière",
+                  msg: "« Je serais très honoré(e) que nous portions mutuellement nos projets matrimoniaux dans la prière cette semaine. »",
+                  badge: "Sainte Communion"
+                }
+              ].map((b, i) => (
+                <div key={i} className="bg-white p-4 sm:p-5 rounded-2xl border border-[#EFECE6] shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[10px] uppercase font-bold text-[#C9A84C] tracking-wider">{b.cat}</span>
+                    <span className="text-[9px] px-2 py-0.5 rounded-full bg-[#1A3A5C]/10 text-[#1A3A5C] font-semibold">{b.badge}</span>
+                  </div>
+                  <p className="text-xs text-[#1A3A5C] italic font-serif leading-relaxed">
+                    {b.msg}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================
           5. LES GRANDS GALAS & SOMMETS RÉELS : AVEC "EN SAVOIR PLUS"
          ======================================================== */}
       <section className="py-20 bg-gradient-to-b from-[#0A192F] to-[#040914] text-white">
