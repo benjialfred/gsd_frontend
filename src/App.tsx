@@ -24,10 +24,11 @@ import { KYCAdmin } from './features/kyc/pages/KYCAdmin';
 import { CoachingPage } from './features/coaching/pages/CoachingPage';
 import { EventsPage } from './features/events/pages/EventsPage';
 import { SubscriptionsPage } from './features/subscriptions/pages/SubscriptionsPage';
+import { AdminDashboard } from './features/administration/pages/AdminDashboard';
 
 function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const location = useLocation();
-  const isDashboard = location.pathname.startsWith('/app') || location.pathname.startsWith('/dashboard');
+  const isDashboard = location.pathname.startsWith('/app') || location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/admin');
   const isOnboarding = location.pathname.startsWith('/onboarding');
   const isAuth = location.pathname === '/login' || 
     location.pathname === '/register' || 
@@ -98,8 +99,10 @@ function App() {
                 <Route path="kyc" element={<KYCWorkspace />} />
              </Route>
              
-             {/* Admin routes could be guarded by another layout later */}
-             <Route path="/admin/kyc" element={<KYCAdmin />} />
+             {/* Admin routes */}
+             <Route path="/admin" element={<AdminDashboard />} />
+             <Route path="/admin/dashboard" element={<AdminDashboard />} />
+             <Route path="/admin/kyc" element={<AdminDashboard />} />
           </Route>
         </Routes>
       </LayoutWrapper>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Logo from '../shared/components/Logo';
 import { useAuthStore } from '../stores/authStore';
-import { User, Menu, X, Sparkles, Compass, GraduationCap, Users, Calendar, Crown, ArrowRight } from 'lucide-react';
+import { User, Menu, X, Sparkles, Compass, GraduationCap, Users, Calendar, Crown, ArrowRight, Shield } from 'lucide-react';
 import { getMediaUrl } from '../services/profile';
 
 export default function Navbar() {
@@ -94,32 +94,43 @@ export default function Navbar() {
         {/* CTA ET AUTH DROITE */}
         <div className="hidden lg:flex items-center gap-3">
           {user ? (
-            <Link
-              to="/app"
-              className="flex items-center gap-2.5 bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 px-4 py-2 rounded-full border border-[#C9A84C]/30 shadow-md transition-all group"
-            >
-              <div className="w-8 h-8 rounded-full p-0.5 bg-gradient-to-tr from-[#C9A84C] to-amber-200 overflow-hidden shadow">
-                {user.profile?.avatar ? (
-                  <img
-                    src={getMediaUrl(user.profile.avatar)}
-                    alt="Mon Profil"
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-[#1A3A5C] text-[#C9A84C] flex items-center justify-center font-bold text-xs rounded-full">
-                    {user.first_name ? user.first_name.charAt(0) : <User size={14} />}
-                  </div>
-                )}
-              </div>
-              <div className="text-left">
-                <span className="block text-xs font-serif font-bold text-[#FAF9F6] group-hover:text-[#C9A84C] transition-colors leading-tight">
-                  Mon Sanctuaire
-                </span>
-                <span className="block text-[9px] text-[#C9A84C] uppercase tracking-wider">
-                  Accès Privilégié
-                </span>
-              </div>
-            </Link>
+            <div className="flex items-center gap-2">
+              {(user.role === 'ADMIN' || user.is_staff || user.is_superuser) && (
+                <Link
+                  to="/admin"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-red-500/20 to-amber-500/20 hover:from-red-500/30 hover:to-amber-500/30 border border-[#C9A84C]/50 text-[#C9A84C] text-[11px] font-bold uppercase tracking-wider shadow-md transition"
+                >
+                  <Shield size={13} className="text-[#C9A84C]" />
+                  <span>Admin</span>
+                </Link>
+              )}
+              <Link
+                to="/app"
+                className="flex items-center gap-2.5 bg-gradient-to-r from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 px-4 py-2 rounded-full border border-[#C9A84C]/30 shadow-md transition-all group"
+              >
+                <div className="w-8 h-8 rounded-full p-0.5 bg-gradient-to-tr from-[#C9A84C] to-amber-200 overflow-hidden shadow">
+                  {user.profile?.avatar ? (
+                    <img
+                      src={getMediaUrl(user.profile.avatar)}
+                      alt="Mon Profil"
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-[#1A3A5C] text-[#C9A84C] flex items-center justify-center font-bold text-xs rounded-full">
+                      {user.first_name ? user.first_name.charAt(0) : <User size={14} />}
+                    </div>
+                  )}
+                </div>
+                <div className="text-left">
+                  <span className="block text-xs font-serif font-bold text-[#FAF9F6] group-hover:text-[#C9A84C] transition-colors leading-tight">
+                    Mon Sanctuaire
+                  </span>
+                  <span className="block text-[9px] text-[#C9A84C] uppercase tracking-wider">
+                    Accès Privilégié
+                  </span>
+                </div>
+              </Link>
+            </div>
           ) : (
             <div className="flex items-center gap-2">
               <Link
@@ -200,13 +211,24 @@ export default function Navbar() {
             {/* Actions Auth Mobile */}
             <div className="pt-4 border-t border-white/10 flex flex-col gap-2.5">
               {user ? (
-                <Link
-                  to="/app"
-                  className="w-full py-3 rounded-2xl text-center text-xs font-bold uppercase tracking-wider bg-white/10 text-[#FAF9F6] border border-[#C9A84C]/40 flex items-center justify-center gap-2"
-                >
-                  <span>Accéder à Mon Dashboard</span>
-                  <ArrowRight size={14} />
-                </Link>
+                <>
+                  {(user.role === 'ADMIN' || user.is_staff || user.is_superuser) && (
+                    <Link
+                      to="/admin"
+                      className="w-full py-3 rounded-2xl text-center text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-red-500/20 to-amber-500/20 text-[#C9A84C] border border-[#C9A84C]/50 flex items-center justify-center gap-2 shadow-md"
+                    >
+                      <Shield size={16} />
+                      <span>Console Administrateur</span>
+                    </Link>
+                  )}
+                  <Link
+                    to="/app"
+                    className="w-full py-3 rounded-2xl text-center text-xs font-bold uppercase tracking-wider bg-white/10 text-[#FAF9F6] border border-[#C9A84C]/40 flex items-center justify-center gap-2"
+                  >
+                    <span>Accéder à Mon Dashboard</span>
+                    <ArrowRight size={14} />
+                  </Link>
+                </>
               ) : (
                 <>
                   <Link
