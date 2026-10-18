@@ -233,7 +233,7 @@ export const CoachDashboard: React.FC = () => {
           <div>
             <div className="text-xs font-medium text-gray-500">Avis & Évaluation</div>
             <div className="text-xl font-extrabold text-[#1A3A5C]">
-              {stats?.rating ? stats.rating.toFixed(1) : '5.0'} <span className="text-xs font-normal text-gray-400">({stats?.reviews_count || 0})</span>
+              {stats?.rating ? Number(stats.rating).toFixed(1) : '5.0'} <span className="text-xs font-normal text-gray-400">({stats?.reviews_count || 0})</span>
             </div>
           </div>
         </div>

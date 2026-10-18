@@ -68,7 +68,7 @@ export const CoachCard: React.FC<CoachCardProps> = ({ coach, onBook }) => {
             <div className="flex items-center gap-3 text-xs text-gray-500">
               <span className="flex items-center gap-1 font-bold text-amber-500">
                 <Star size={13} className="fill-amber-400 text-amber-400" />
-                {coach.rating > 0 ? coach.rating.toFixed(1) : '5.0'}
+                {Number(coach.rating) > 0 ? Number(coach.rating).toFixed(1) : '5.0'}
                 <span className="text-gray-400 font-normal">({coach.reviews_count || 12} avis)</span>
               </span>
               <span className="text-gray-300">•</span>

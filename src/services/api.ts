@@ -13,7 +13,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000, // Timeout de 10 secondes pour éviter les blocages infinis
+  timeout: 35000, // Timeout de 35s pour absorber les démarrages à froid de Render
 });
 
 // Hydratation asynchrone initiale du cache hors-ligne

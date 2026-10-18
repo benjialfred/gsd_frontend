@@ -117,16 +117,7 @@ export const AdminDashboard: React.FC = () => {
     setErrorMsg(null);
 
     try {
-      const [
-        metricsRes,
-        usersRes,
-        txRes,
-        eventsRes,
-        regRes,
-        kycRes,
-        coachesRes,
-        auditRes
-      ] = await Promise.all([
+      const results = await Promise.allSettled([
         api.get('/api/admin/metrics/'),
         api.get('/api/admin/users/'),
         api.get('/api/admin/transactions/'),
@@ -137,14 +128,24 @@ export const AdminDashboard: React.FC = () => {
         api.get('/api/admin/audit-logs/')
       ]);
 
-      setMetrics(metricsRes.data);
-      setUsersList(usersRes.data);
-      setTransactions(txRes.data);
-      setEventsList(eventsRes.data);
-      setRegistrations(regRes.data);
-      setKycQueue(kycRes.data);
-      setCoachesList(coachesRes.data);
-      setAuditLogs(auditRes.data);
+      if (results[0].status === 'fulfilled') setMetrics(results[0].value.data);
+      if (results[1].status === 'fulfilled') setUsersList(results[1].value.data);
+      if (results[2].status === 'fulfilled') setTransactions(results[2].value.data);
+      if (results[3].status === 'fulfilled') setEventsList(results[3].value.data);
+      if (results[4].status === 'fulfilled') setRegistrations(results[4].value.data);
+      if (results[5].status === 'fulfilled') setKycQueue(results[5].value.data);
+      if (results[6].status === 'fulfilled') setCoachesList(results[6].value.data);
+      if (results[7].status === 'fulfilled') setAuditLogs(results[7].value.data);
+
+      const rejected = results.filter(r => r.status === 'rejected') as PromiseRejectedResult[];
+      if (rejected.length > 0) {
+        const firstErr = rejected[0].reason;
+        if (firstErr?.response?.status === 403) {
+          setErrorMsg("Accès restreint (403) : Veuillez vous reconnecter avec votre compte administrateur (admin_gsd ou compte staff).");
+        } else if (firstErr?.code === 'ECONNABORTED' || firstErr?.message?.includes('timeout')) {
+          setErrorMsg("Démarrage du serveur en cours. Veuillez réactualiser dans quelques secondes.");
+        }
+      }
     } catch (err: any) {
       console.error('Erreur chargement console admin:', err);
       setErrorMsg(err.response?.data?.detail || "Erreur de connexion aux services administratifs");
