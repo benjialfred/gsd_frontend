@@ -10,6 +10,7 @@ import Logo from '../../../shared/components/Logo';
 export default function Register() {
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState('');
+  const [isAlreadyRegistered, setIsAlreadyRegistered] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,13 +26,21 @@ export default function Register() {
     }
     setIsLoading(true);
     setApiError('');
+    setIsAlreadyRegistered(false);
     setSuccessMessage('');
     try {
-      const res = await api.post('/api/users/register/', { email, password });
-      navigate('/check-email', { state: { email: email } });
+      const res = await api.post('/api/users/register/', { email: email.trim().toLowerCase(), password });
+      if (res.data?.resend) {
+        navigate('/check-email', { state: { email: email.trim().toLowerCase(), resend: true, message: res.data.message } });
+      } else {
+        navigate('/check-email', { state: { email: email.trim().toLowerCase() } });
+      }
     } catch (err: any) {
       console.error("Erreur Inscription: ", err, err.response);
       const data = err.response?.data;
+      if (data?.already_registered) {
+        setIsAlreadyRegistered(true);
+      }
       const msg = data?.email?.[0] || data?.username?.[0] || data?.error || data?.detail || err.message || 'Erreur réseau ou serveur inaccessible.';
       setApiError(msg);
     } finally {
@@ -75,7 +84,18 @@ export default function Register() {
         
         <h1 className="text-4xl font-serif text-[#1A3A5C] mb-10 tracking-wide font-normal">S'inscrire</h1>
 
-        {apiError && <div className="w-full bg-red-50 border border-red-100 text-red-500 text-xs p-3 mb-6 text-center">{apiError}</div>}
+        {apiError && (
+          <div className="w-full bg-red-50 border border-red-100 text-red-600 text-xs p-3.5 mb-6 text-center rounded-lg leading-relaxed space-y-1.5">
+            <p>{apiError}</p>
+            {isAlreadyRegistered && (
+              <p className="pt-1 font-medium">
+                <Link to="/login" className="underline text-[#1A3A5C] hover:text-[#C9A84C] transition-colors">
+                  Cliquez ici pour vous connecter directement
+                </Link>
+              </p>
+            )}
+          </div>
+        )}
         {successMessage && <div className="w-full bg-[#fcf9f2] border border-[#C9A84C]/30 text-[#C9A84C] text-xs p-3 mb-6 text-center leading-relaxed">{successMessage}</div>}
 
         <form onSubmit={handleSubmit} className="w-full space-y-6">

@@ -25,9 +25,19 @@ export default function CheckEmail() {
         <h1 className="text-3xl font-serif text-[#1A3A5C] mb-4 tracking-wide font-normal">Vérifiez votre messagerie</h1>
         
         <p className="text-gray-500 text-sm font-light leading-relaxed mb-8">
-          Nous vous avons envoyé un lien de confirmation à <br/>
-          <span className="font-medium text-[#1A3A5C]">{email}</span>. <br/><br/>
-          Veuillez cliquer sur le lien dans l'e-mail pour activer votre compte et commencer votre parcours.
+          {location.state?.resend ? (
+            <>
+              Un compte était déjà en cours de création avec cet e-mail. Nous venons de vous renvoyer un lien de confirmation à <br/>
+              <span className="font-medium text-[#1A3A5C]">{email}</span>. <br/><br/>
+              Veuillez ouvrir votre messagerie et cliquer sur le lien pour finaliser votre activation.
+            </>
+          ) : (
+            <>
+              Nous vous avons envoyé un lien de confirmation à <br/>
+              <span className="font-medium text-[#1A3A5C]">{email}</span>. <br/><br/>
+              Veuillez cliquer sur le lien dans l'e-mail pour activer votre compte et commencer votre parcours.
+            </>
+          )}
         </p>
 
         <div className="w-full h-px bg-gray-100 mb-8"></div>
