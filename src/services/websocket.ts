@@ -6,10 +6,18 @@ class WebSocketService {
   private maxReconnectAttempts = 5;
 
   connect() {
-    // In production, we'd use wss:// and the real token/session
-    const wsUrl = `ws://${window.location.host}/ws/notifications/`;
+    const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    const isHttps = backendUrl.startsWith('https://');
+    const wsProtocol = isHttps ? 'wss:' : 'ws:';
+    const wsHost = backendUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
+    const wsUrl = `${wsProtocol}//${wsHost}/ws/notifications/`;
     
-    this.socket = new WebSocket(wsUrl);
+    try {
+      this.socket = new WebSocket(wsUrl);
+    } catch (err) {
+      console.warn('[WebSocket] Connection failed to initialize:', err);
+      return;
+    }
 
     this.socket.onopen = () => {
       console.log('[WebSocket] Connected');
