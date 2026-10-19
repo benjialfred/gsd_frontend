@@ -15,11 +15,20 @@ export const PaymentHistoryView: React.FC = () => {
   const fetchTransactions = async () => {
     setLoading(true);
     try {
+      const token = localStorage.getItem('access');
+      if (!token) {
+        setTransactions([]);
+        return;
+      }
       const data = await subscriptionService.getMyPaymentHistory();
-      setTransactions(data);
+      setTransactions(Array.isArray(data) ? data : []);
     } catch (err: any) {
-      console.error("Erreur historique paiements:", err);
-      toast.error("Impossible de récupérer l'historique des paiements.");
+      if (err.response?.status !== 401) {
+        console.error("Erreur historique paiements:", err);
+        toast.error("Impossible de récupérer l'historique des paiements.");
+      } else {
+        setTransactions([]);
+      }
     } finally {
       setLoading(false);
     }

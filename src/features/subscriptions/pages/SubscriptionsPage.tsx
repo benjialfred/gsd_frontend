@@ -23,15 +23,31 @@ export const SubscriptionsPage: React.FC = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [plansData, subData] = await Promise.all([
-        subscriptionService.getPlans(),
-        subscriptionService.getMySubscription(),
-      ]);
-      setPlans(plansData);
-      setCurrentSub(subData);
+      // 1. Charger les formules (disponibles pour tous)
+      try {
+        const plansData = await subscriptionService.getPlans();
+        if (Array.isArray(plansData)) {
+          setPlans(plansData);
+        }
+      } catch (pErr: any) {
+        console.warn("Erreur chargement formules:", pErr);
+      }
+
+      // 2. Charger l'abonnement du membre s'il est authentifié
+      const token = localStorage.getItem('access');
+      if (token) {
+        try {
+          const subData = await subscriptionService.getMySubscription();
+          setCurrentSub(subData);
+        } catch (sErr: any) {
+          // Si le token est expiré ou 401, ne pas bloquer l'affichage des formules
+          if (sErr.response?.status !== 401) {
+            console.warn("Erreur abonnement actuel:", sErr);
+          }
+        }
+      }
     } catch (err: any) {
-      console.error("Erreur chargement abonnements:", err);
-      toast.error("Impossible de charger les formules d'abonnement.");
+      console.error("Erreur générale abonnements:", err);
     } finally {
       setLoading(false);
     }

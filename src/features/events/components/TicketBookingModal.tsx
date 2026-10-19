@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { EventItem, TicketTier, EventRegistration } from '../types/events';
 import { eventsService } from '../services/eventsService';
 import { useAuthStore } from '../../../stores/authStore';
@@ -24,18 +24,27 @@ export const TicketBookingModal: React.FC<TicketBookingModalProps> = ({
 }) => {
   const { user } = useAuthStore();
 
-  if (!isOpen || !event) return null;
-
-  const defaultTier = event.ticket_tiers.find((t) => t.is_active && t.available_quantity > 0) || event.ticket_tiers[0];
-  const [selectedTierId, setSelectedTierId] = useState<number>(defaultTier ? defaultTier.id : 0);
-  
-  const [guestName, setGuestName] = useState<string>(
-    user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username : ''
-  );
-  const [guestEmail, setGuestEmail] = useState<string>(user?.email || '');
+  const [selectedTierId, setSelectedTierId] = useState<number>(0);
+  const [guestName, setGuestName] = useState<string>('');
+  const [guestEmail, setGuestEmail] = useState<string>('');
   const [guestPhone, setGuestPhone] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (event && event.ticket_tiers && event.ticket_tiers.length > 0) {
+      const defaultTier = event.ticket_tiers.find((t) => t.is_active && t.available_quantity > 0) || event.ticket_tiers[0];
+      if (defaultTier) {
+        setSelectedTierId(defaultTier.id);
+      }
+    }
+    if (user) {
+      setGuestName(`${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username || '');
+      setGuestEmail(user.email || '');
+    }
+  }, [event, user, isOpen]);
+
+  if (!isOpen || !event) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
