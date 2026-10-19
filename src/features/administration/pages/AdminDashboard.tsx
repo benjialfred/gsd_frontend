@@ -26,7 +26,10 @@ import {
   Sparkles,
   Award,
   ChevronRight,
-  DollarSign
+  DollarSign,
+  Plus,
+  UserPlus,
+  X
 } from 'lucide-react';
 import api from '../../../services/api';
 import { useAuthStore } from '../../../stores/authStore';
@@ -110,6 +113,67 @@ export const AdminDashboard: React.FC = () => {
 
   // Modal inspection utilisateur
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
+
+  // Modal création utilisateur / coach / formateur
+  const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
+  const [createUserLoading, setCreateUserLoading] = useState(false);
+  const [createUserError, setCreateUserError] = useState<string | null>(null);
+  const [createUserSuccess, setCreateUserSuccess] = useState<string | null>(null);
+  const [newUserForm, setNewUserForm] = useState({
+    email: '',
+    password: '',
+    first_name: '',
+    last_name: '',
+    role: 'COACH',
+    gender: 'M',
+    title: 'Conseiller Conjugal & Accompagnateur Pastoral',
+    bio: '',
+    specialties: 'Préparation au Mariage, Communication du Couple',
+    years_of_experience: 5,
+    denomination: 'Interdénominationnel',
+    hourly_rate: 25000,
+    meeting_link: '',
+    avatar_url: ''
+  });
+
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreateUserLoading(true);
+    setCreateUserError(null);
+    setCreateUserSuccess(null);
+    try {
+      await api.post('/api/admin/users/', newUserForm);
+      setCreateUserSuccess(`Compte créé avec succès pour ${newUserForm.first_name} (${newUserForm.role}) !`);
+      setTimeout(() => {
+        setCreateUserModalOpen(false);
+        setCreateUserSuccess(null);
+        setNewUserForm({
+          email: '',
+          password: '',
+          first_name: '',
+          last_name: '',
+          role: 'COACH',
+          gender: 'M',
+          title: 'Conseiller Conjugal & Accompagnateur Pastoral',
+          bio: '',
+          specialties: 'Préparation au Mariage, Communication du Couple',
+          years_of_experience: 5,
+          denomination: 'Interdénominationnel',
+          hourly_rate: 25000,
+          meeting_link: '',
+          avatar_url: ''
+        });
+        fetchAllData(true);
+      }, 1400);
+    } catch (err: any) {
+      console.error("Erreur création utilisateur admin:", err);
+      const data = err.response?.data;
+      const msg = data?.email?.[0] || data?.error || data?.detail || err.message || "Erreur lors de la création du compte.";
+      setCreateUserError(msg);
+    } finally {
+      setCreateUserLoading(false);
+    }
+  };
 
   const fetchAllData = async (isSilent = false) => {
     if (!isSilent) setLoading(true);
@@ -583,6 +647,16 @@ export const AdminDashboard: React.FC = () => {
                     <option value="COACH">Coachs & Pasteurs</option>
                     <option value="FORMATEUR">Formateurs Académie</option>
                   </select>
+                  <button
+                    onClick={() => {
+                      setNewUserForm(prev => ({ ...prev, role: 'USER' }));
+                      setCreateUserModalOpen(true);
+                    }}
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-[#C9A84C] to-[#E6CA65] hover:from-[#DFB76C] hover:to-[#F3DE8A] text-[#0A192F] font-bold text-xs uppercase tracking-wider transition-all duration-300 shadow-md whitespace-nowrap ml-auto sm:ml-2"
+                  >
+                    <UserPlus size={15} />
+                    <span>Créer un Compte</span>
+                  </button>
                 </div>
               </div>
 
@@ -1072,6 +1146,23 @@ export const AdminDashboard: React.FC = () => {
               exit={{ opacity: 0, y: -10 }}
               className="space-y-6"
             >
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white/5 border border-white/10 p-5 rounded-3xl shadow-xl">
+                <div>
+                  <h3 className="font-serif font-bold text-white text-lg">Corps Pastoral & Conseillers Accrédités</h3>
+                  <p className="text-xs text-gray-400">Gérez les profils des coachs accrédités et créez de nouveaux conseillers spirituels.</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setNewUserForm(prev => ({ ...prev, role: 'COACH' }));
+                    setCreateUserModalOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#C9A84C] to-[#E6CA65] hover:from-[#DFB76C] hover:to-[#F3DE8A] text-[#0A192F] font-bold text-xs uppercase tracking-wider transition-all duration-300 shadow-md whitespace-nowrap"
+                >
+                  <UserPlus size={16} />
+                  <span>Nouveau Coach / Conseiller</span>
+                </button>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {coachesList.map(coach => (
                   <div key={coach.id} className="bg-white/5 border border-white/10 p-6 rounded-3xl space-y-4 shadow-xl">
@@ -1241,6 +1332,259 @@ export const AdminDashboard: React.FC = () => {
             >
               Fermer
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* MODAL : CRÉATION D'UTILISATEUR / COACH / FORMATEUR         */}
+      {/* ========================================================= */}
+      {createUserModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
+          <div className="bg-[#0A192F] border border-white/20 p-6 rounded-3xl max-w-xl w-full shadow-2xl space-y-4 my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center pb-3 border-b border-white/10">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-[#C9A84C]/20 text-[#C9A84C] flex items-center justify-center">
+                  <UserPlus size={18} />
+                </div>
+                <div>
+                  <h3 className="font-serif font-bold text-white text-base">Créer un Nouveau Compte</h3>
+                  <p className="text-[11px] text-gray-400">Ajoutez un coach, formateur académique ou administrateur</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setCreateUserModalOpen(false)} 
+                className="text-gray-400 hover:text-white transition p-1 rounded-lg hover:bg-white/10"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {createUserError && (
+              <div className="p-3 bg-red-500/20 border border-red-500/30 text-red-200 rounded-xl text-xs flex items-center gap-2">
+                <AlertTriangle size={16} className="text-red-400 shrink-0" />
+                <span>{createUserError}</span>
+              </div>
+            )}
+
+            {createUserSuccess && (
+              <div className="p-3 bg-emerald-500/20 border border-emerald-500/30 text-emerald-200 rounded-xl text-xs flex items-center gap-2">
+                <CheckCircle size={16} className="text-emerald-400 shrink-0" />
+                <span>{createUserSuccess}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleCreateUser} className="space-y-4">
+              {/* RÔLE */}
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-300 uppercase tracking-wider mb-1.5">
+                  Type de Compte / Rôle <span className="text-[#C9A84C]">*</span>
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {[
+                    { id: 'COACH', label: 'Coach / Pasteur' },
+                    { id: 'FORMATEUR', label: 'Formateur' },
+                    { id: 'ADMIN', label: 'Admin' },
+                    { id: 'USER', label: 'Membre' },
+                  ].map(r => (
+                    <button
+                      type="button"
+                      key={r.id}
+                      onClick={() => setNewUserForm(f => ({ ...f, role: r.id }))}
+                      className={`py-2 px-2.5 rounded-xl text-xs font-bold transition border ${
+                        newUserForm.role === r.id
+                          ? 'bg-[#C9A84C] text-[#0A192F] border-[#C9A84C] shadow-lg'
+                          : 'bg-black/30 text-gray-300 border-white/10 hover:border-white/30'
+                      }`}
+                    >
+                      {r.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* IDENTITÉ */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-semibold text-gray-300 mb-1">Prénom <span className="text-red-400">*</span></label>
+                  <input
+                    type="text"
+                    required
+                    value={newUserForm.first_name}
+                    onChange={e => setNewUserForm(f => ({ ...f, first_name: e.target.value }))}
+                    placeholder="Ex: David"
+                    className="w-full px-3 py-2 bg-black/40 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#C9A84C]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-semibold text-gray-300 mb-1">Nom <span className="text-red-400">*</span></label>
+                  <input
+                    type="text"
+                    required
+                    value={newUserForm.last_name}
+                    onChange={e => setNewUserForm(f => ({ ...f, last_name: e.target.value }))}
+                    placeholder="Ex: Kouassi"
+                    className="w-full px-3 py-2 bg-black/40 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#C9A84C]"
+                  />
+                </div>
+              </div>
+
+              {/* EMAIL & MOT DE PASSE */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-semibold text-gray-300 mb-1">Adresse Email <span className="text-red-400">*</span></label>
+                  <input
+                    type="email"
+                    required
+                    value={newUserForm.email}
+                    onChange={e => setNewUserForm(f => ({ ...f, email: e.target.value }))}
+                    placeholder="coach.david@gsd.com"
+                    className="w-full px-3 py-2 bg-black/40 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#C9A84C]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-semibold text-gray-300 mb-1">Mot de Passe Provisoire <span className="text-red-400">*</span></label>
+                  <input
+                    type="password"
+                    required
+                    value={newUserForm.password}
+                    onChange={e => setNewUserForm(f => ({ ...f, password: e.target.value }))}
+                    placeholder="Min. 8 caractères"
+                    className="w-full px-3 py-2 bg-black/40 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#C9A84C]"
+                  />
+                </div>
+              </div>
+
+              {/* GENRE & DÉNOMINATION */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-semibold text-gray-300 mb-1">Genre <span className="text-red-400">*</span></label>
+                  <select
+                    value={newUserForm.gender}
+                    onChange={e => setNewUserForm(f => ({ ...f, gender: e.target.value }))}
+                    className="w-full px-3 py-2 bg-black/40 border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-[#C9A84C]"
+                  >
+                    <option value="M">Homme (M)</option>
+                    <option value="F">Femme (F)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-semibold text-gray-300 mb-1">Dénomination Religieuse</label>
+                  <input
+                    type="text"
+                    value={newUserForm.denomination}
+                    onChange={e => setNewUserForm(f => ({ ...f, denomination: e.target.value }))}
+                    placeholder="Ex: Évangélique, Baptiste, Protestant..."
+                    className="w-full px-3 py-2 bg-black/40 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#C9A84C]"
+                  />
+                </div>
+              </div>
+
+              {/* CHAMPS SPÉCIFIQUES COACH / FORMATEUR */}
+              {(newUserForm.role === 'COACH' || newUserForm.role === 'FORMATEUR') && (
+                <div className="pt-2 border-t border-white/10 space-y-3">
+                  <p className="text-[11px] font-bold text-[#C9A84C] uppercase tracking-wider">Informations Professionnelles du Praticien</p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[11px] font-semibold text-gray-300 mb-1">Titre Professionnel</label>
+                      <input
+                        type="text"
+                        value={newUserForm.title}
+                        onChange={e => setNewUserForm(f => ({ ...f, title: e.target.value }))}
+                        placeholder="Ex: Pasteur & Conseiller Conjugal"
+                        className="w-full px-3 py-2 bg-black/40 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#C9A84C]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-gray-300 mb-1">Tarif Séance (FCFA)</label>
+                      <input
+                        type="number"
+                        min="0"
+                        step="1000"
+                        value={newUserForm.hourly_rate}
+                        onChange={e => setNewUserForm(f => ({ ...f, hourly_rate: Number(e.target.value) }))}
+                        className="w-full px-3 py-2 bg-black/40 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#C9A84C]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[11px] font-semibold text-gray-300 mb-1">Spécialités</label>
+                      <input
+                        type="text"
+                        value={newUserForm.specialties}
+                        onChange={e => setNewUserForm(f => ({ ...f, specialties: e.target.value }))}
+                        placeholder="Ex: Fiançailles, Communication, Crises"
+                        className="w-full px-3 py-2 bg-black/40 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#C9A84C]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-gray-300 mb-1">Années d'expérience</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="60"
+                        value={newUserForm.years_of_experience}
+                        onChange={e => setNewUserForm(f => ({ ...f, years_of_experience: Number(e.target.value) }))}
+                        className="w-full px-3 py-2 bg-black/40 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#C9A84C]"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-gray-300 mb-1">Lien de Réunion Virtuelle (Google Meet / Zoom)</label>
+                    <input
+                      type="url"
+                      value={newUserForm.meeting_link}
+                      onChange={e => setNewUserForm(f => ({ ...f, meeting_link: e.target.value }))}
+                      placeholder="https://meet.google.com/..."
+                      className="w-full px-3 py-2 bg-black/40 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#C9A84C]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-gray-300 mb-1">Bio / Présentation Spirituelle</label>
+                    <textarea
+                      rows={2}
+                      value={newUserForm.bio}
+                      onChange={e => setNewUserForm(f => ({ ...f, bio: e.target.value }))}
+                      placeholder="Présentation de l'appel pastoral, ministère..."
+                      className="w-full px-3 py-2 bg-black/40 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#C9A84C]"
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="pt-3 border-t border-white/10 flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setCreateUserModalOpen(false)}
+                  disabled={createUserLoading}
+                  className="px-4 py-2.5 bg-white/10 hover:bg-white/15 text-gray-300 font-bold text-xs uppercase tracking-wider rounded-xl transition"
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  disabled={createUserLoading}
+                  className="px-5 py-2.5 bg-gradient-to-r from-[#C9A84C] to-[#E6CA65] hover:from-[#DFB76C] hover:to-[#F3DE8A] text-[#0A192F] font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-lg flex items-center gap-2"
+                >
+                  {createUserLoading ? (
+                    <>
+                      <RefreshCw size={14} className="animate-spin" />
+                      <span>Création en cours...</span>
+                    </>
+                  ) : (
+                    <>
+                      <UserPlus size={15} />
+                      <span>Confirmer & Créer</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
